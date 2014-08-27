@@ -45,6 +45,27 @@ class Pagination {
 			$this->config['page_indicator'] = $settings['pagination_page_indicator'];
 		if (isset($settings['pagination_output_format']))
 			$this->config['output_format'] = $settings['pagination_output_format'];
+		if (isset($settings['pagination_next_title']))
+			$this->config['next_title'] = $settings['pagination_next_title'];
+		if (isset($settings['pagination_prev_title']))
+			$this->config['prev_title'] = $settings['pagination_prev_title'];
+	}
+
+	private function build_link_title($side) {
+		if ($side === "prev") {
+			if (isset($this->config['prev_title']) && $this->config['prev_title'] != '') {
+				return $this->config['prev_title'];
+			}
+			else
+				return "";
+		}
+		if ($side === "next") {
+			if (isset($this->config['next_title']) && $this->config['next_title'] != '') {
+				return $this->config['next_title'];
+			}
+			else
+				return "";
+		}
 	}
 
 	public function get_pages(&$pages, &$current_page, &$prev_page, &$next_page)
@@ -94,11 +115,11 @@ class Pagination {
 		$pagination_parts = array();
 		if ($this->page_number > 1) {
 			$prev_path = $config['base_url'] . '/' . $this->config['page_indicator'] . '/' . ($this->page_number - 1);
-			$pagination_parts['prev_link'] = $twig_vars['prev_page_link'] = '<a href="' . $prev_path . '" id="prev_page_link">' . $this->config['prev_text'] . '</a>';
+			$pagination_parts['prev_link'] = $twig_vars['prev_page_link'] = '<a href="' . $prev_path . '" title="'.$this->build_link_title("prev").'" id="prev_page_link">' . $this->config['prev_text'] . '</a>';
 		}
 		if ($this->page_number < $this->total_pages) {
 			$next_path = $config['base_url'] . '/' . $this->config['page_indicator'] . '/' . ($this->page_number + 1);
-			$pagination_parts['next_link'] = $twig_vars['next_page_link'] = '<a href="' . $next_path . '" id="next_page_link">' . $this->config['next_text'] . '</a>';
+			$pagination_parts['next_link'] = $twig_vars['next_page_link'] = '<a href="' . $next_path . '" title="'.$this->build_link_title("next").'" id="next_page_link">' . $this->config['next_text'] . '</a>';
 		}
 
 		// reverse order if flip_links is on
