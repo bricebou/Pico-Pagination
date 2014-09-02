@@ -103,7 +103,14 @@ class Pagination {
 
 		// set var for page_number
 		if ($this->page_number)
+		{
 			$twig_vars['page_number'] = $this->page_number;
+			if ($this->page_number != "1")
+			{
+				$twig_vars['meta']['title'] .= " ─ page " . $this->page_number;
+			}
+		}
+			
 
 		// set var for total pages
 		if ($this->total_pages)
